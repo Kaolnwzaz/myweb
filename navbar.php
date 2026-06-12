@@ -1,6 +1,20 @@
+<?php
+//session_start();
+
+?>
+
+
 <div class="navbar">
     <a href="index.php">หน้าแรก</a>
-    <a href="register.php">สมัครสมาชิก</a>
-    <a href="login.php">เข้าสู่ระบบ</a>
     <a href="about.php">เกี่ยวกับเรา</a>
+
+    <?php if (isset($_SESSION["user_id"])){ ?>
+        <a href="upload.php">อัปโหลด</a>
+        <a href="profile.php"> <?php echo $_SESSION["name"]; ?></a>
+        <a href="logout.php">ออกจากระบบ</a>
+    <?php }else { ?>
+     <a href="login.php">เข้าสู่ระบบ</a> 
+     <a href="register.php">สมัครสมาชิก</a>
+    <?php  } ?>
+
 </div>

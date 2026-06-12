@@ -1,10 +1,7 @@
 <?php
-require "config.php";
+session_start();
 
-if (isset($_SESSION["user_id"])) {
-    header("Location: profile.php");
-    exit;
-}
+require "config.php";
 
 $message = "";
 
@@ -12,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST["email"]);
     $password = $_POST["password"];
 
-    $sql = "SELECT id, name, email, password FROM tbl_user WHERE email = ?";
+    $sql = "SELECT * FROM tbl_user WHERE email = ?";
     $stmt = mysqli_prepare($conn, $sql);
 
     mysqli_stmt_bind_param($stmt, "s", $email);
@@ -20,6 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $result = mysqli_stmt_get_result($stmt);
     $user = mysqli_fetch_assoc($result);
+
+    
 
     if ($user && password_verify($password, $user["password"])) {
         $_SESSION["user_id"] = $user["id"];
@@ -39,21 +38,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
+<link rel="stylesheet" href="style.css">
+<?php
+include 'navbar.php';
+?>
+
+<div class="form-container">
 <h2>เข้าสู่ระบบ</h2>
 
-<form method="POST">
+<form action="login.php" method="POST">
     <input type="email" name="email" placeholder="อีเมล"
-           value="<?= $_COOKIE['user_email'] ?? '' ?>"><br>
+           value="<?= $_COOKIE['user_email'] ?? '' ?>" class="input-field"><br> <br/>
 
-    <input type="password" name="password" placeholder="รหัสผ่าน"><br>
+    <input type="password" name="password" placeholder="รหัสผ่าน" class="input-field"><br>
 
     <label>
         <input type="checkbox" name="remember">
         จำอีเมลไว้
     </label><br>
 
-    <button type="submit">Login</button>
+    <button type="submit" class="btn">Login</button>
 </form>
 
 <p><?= $message ?></p>
 <a href="register.php">สมัครสมาชิก</a>
+
+</div>
